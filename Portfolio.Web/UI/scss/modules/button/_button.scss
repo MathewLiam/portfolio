@@ -1,0 +1,16 @@
+.c-btn {
+     padding: 5px 15px;
+     border: 1px solid #5E3BEE;
+     border-radius: 6px;
+     color: #5E3BEE;
+
+     text-decoration: none;
+
+     &:hover,
+     &:active,
+     &:focus {
+          background-color: #5E3BEE;
+          color: #fff;
+          cursor: pointer;
+     }
+}

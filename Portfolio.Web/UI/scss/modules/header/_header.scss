@@ -1,0 +1,39 @@
+.c-header {
+     background-color: #fff;
+     padding: 14px;
+
+     &__content {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          max-width: 1200px;
+          margin: auto;
+     }     
+
+     &__links {
+          display: none;
+          flex-direction: row;
+          justify-content: space-evenly;
+
+          @media (min-width: 750px) {
+               display: flex;
+          }
+     }
+
+     &__link {
+          padding: 8px;
+
+          &:hover,
+          &:active,
+          &:focus {
+               font-weight: 700;
+               cursor: pointer;
+          }
+     }
+
+     &__contact {
+
+     }
+
+}
