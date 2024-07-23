@@ -6,4 +6,4 @@
 	Layout = "_Layout.cshtml";
 }
 
-<div id="root"></div>
+@await Html.GetBlockGridHtmlAsync(Model, "bodyContent")

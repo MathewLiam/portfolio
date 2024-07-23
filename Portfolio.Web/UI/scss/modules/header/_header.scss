@@ -2,13 +2,18 @@
      background-color: #fff;
      padding: 14px;
 
+     &__brand {
+          text-decoration: none;
+          color: black;
+     }
+
      &__content {
+          @extend .l-container;
+
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          max-width: 1200px;
-          margin: auto;
      }     
 
      &__links {
@@ -31,9 +36,4 @@
                cursor: pointer;
           }
      }
-
-     &__contact {
-
-     }
-
 }
