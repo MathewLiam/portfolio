@@ -1,16 +1,21 @@
 .c-btn {
      padding: 5px 15px;
-     border: 1px solid #5E3BEE;
+     border: 1px solid $tiel;
      border-radius: 6px;
-     color: #5E3BEE;
+     color: $tiel;
 
      text-decoration: none;
 
      &:hover,
-     &:active,
-     &:focus {
-          background-color: #5E3BEE;
-          color: #fff;
+     &:active {
+          background-color: $tiel;
+          color: $white;
           cursor: pointer;
      }
+
+     &:focus {
+          background-color: $focus-grey;
+     }
+
+
 }

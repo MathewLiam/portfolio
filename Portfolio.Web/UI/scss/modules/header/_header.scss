@@ -1,10 +1,10 @@
 .c-header {
-     background-color: #fff;
+     background-color: $bg-grey;
      padding: 14px;
 
-     &__brand {
+     &__brand > a {
           text-decoration: none;
-          color: black;
+          color: $white;
      }
 
      &__content {
