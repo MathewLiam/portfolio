@@ -18,5 +18,16 @@
           > * {
                margin: 0 1rem;
           }
+
+          &-icon {
+               fill: $white;
+
+               &:hover,
+               &:active,
+               &:focus {
+                    fill: $tiel;
+                    cursor: pointer;
+               }
+          }
      }
 }

@@ -479,5 +479,6 @@ appsettings-schema.*.json
 /wwwroot/media/
 /wwwroot/js
 /wwwroot/css
+/wwwroot/assets
 
 /UI/ts/coverage
