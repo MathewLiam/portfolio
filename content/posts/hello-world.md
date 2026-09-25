@@ -3,6 +3,7 @@ title: Hello, world
 date: 2026-09-25
 description: The first post on this blog, and a quick tour of how posts are written.
 tags: [meta, nextjs]
+draft: true
 ---
 
 Welcome to the blog. Every post is a Markdown file in `content/posts/`, and the file name becomes the URL, so this file (`hello-world.md`) is served at `/posts/hello-world`.
