@@ -20,6 +20,29 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Deploying to Cloudflare Pages
+
+The site builds as a static export to `out/` and is deployed with Wrangler (config in `wrangler.toml`).
+
+One-time setup: create the Pages project with Terraform (`infra/`):
+
+```bash
+cd infra
+cp terraform.tfvars.example terraform.tfvars   # set account_id (and optionally custom_domain/zone_id)
+export CLOUDFLARE_API_TOKEN=...                # token with Pages: Edit (+ DNS: Edit for a custom domain)
+terraform init
+terraform apply
+```
+
+Terraform state is stored locally in `infra/` by default. Keep it safe, or configure a remote backend in `infra/versions.tf`.
+
+Then deploy with `npm run deploy`, or preview locally with `npm run preview`.
+
+CI (`azure-pipelines.yml`) deploys automatically: `master` goes to production, and other branches and PRs get preview deployments. Add these pipeline variables in Azure DevOps:
+
+- `CLOUDFLARE_API_TOKEN`: secret; an API token with the **Cloudflare Pages: Edit** permission
+- `CLOUDFLARE_ACCOUNT_ID`: your Cloudflare account ID
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -28,9 +51,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

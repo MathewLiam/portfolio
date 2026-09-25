@@ -1,9 +1,16 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+# Builds the Next.js static export and deploys it to Cloudflare Pages.
+#
+# Required pipeline variables (Pipelines > Edit > Variables):
+#   CLOUDFLARE_API_TOKEN   (secret) API token with "Cloudflare Pages: Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID  Cloudflare account ID
+#
+# The Pages project name and output directory come from wrangler.toml.
+# master deploys to production; other branches and PRs deploy as preview deployments.
 
 trigger:
+- master
+
+pr:
 - master
 
 pool:
@@ -12,34 +19,31 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '18.x'
+    versionSpec: '22.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+- script: npm ci
+  displayName: 'Install dependencies'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: |
-      .next/**
-      public/**
-      package.json
-      package-lock.json
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/bin'
+- script: npm run lint
+  displayName: 'Lint'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/bin'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+- script: npm run build
+  displayName: 'Build static export'
+
+- bash: |
+    # PR builds check out a merge ref, so deploy under the PR's source branch instead.
+    BRANCH="${SYSTEM_PULLREQUEST_SOURCEBRANCH:-$BUILD_SOURCEBRANCH}"
+    BRANCH="${BRANCH#refs/heads/}"
+    npx wrangler pages deploy --branch "$BRANCH" --commit-hash "$BUILD_SOURCEVERSION"
+  displayName: 'Deploy to Cloudflare Pages'
+  env:
+    CLOUDFLARE_API_TOKEN: $(CLOUDFLARE_API_TOKEN)
+    CLOUDFLARE_ACCOUNT_ID: $(CLOUDFLARE_ACCOUNT_ID)
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    ArtifactName: 'drop'
+    PathtoPublish: 'out'
+    ArtifactName: 'site'
     publishLocation: 'Container'
+  displayName: 'Publish site artifact'

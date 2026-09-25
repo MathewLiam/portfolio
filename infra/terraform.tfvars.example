@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and fill in.
+account_id = "your-cloudflare-account-id"
+
+# Optional custom domain:
+# custom_domain = "www.example.com"
+# zone_id       = "your-zone-id"

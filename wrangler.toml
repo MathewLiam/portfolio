@@ -1,0 +1,5 @@
+# Cloudflare Pages configuration.
+# The project must exist first: npx wrangler pages project create mm-website --production-branch master
+name = "mm-website"
+pages_build_output_dir = "./out"
+compatibility_date = "2026-09-25"
