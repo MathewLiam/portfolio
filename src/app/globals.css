@@ -2,32 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+body {
+  @apply bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+}
+
+/* Code blocks from rehype-pretty-code (Shiki, light + dark themes). */
+.prose pre {
+  @apply border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900;
+}
+
+.prose code[data-theme],
+.prose code[data-theme] span {
+  color: var(--shiki-light);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  .prose code[data-theme],
+  .prose code[data-theme] span {
+    color: var(--shiki-dark);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+/* Inline code: pill instead of Typography's default backticks. */
+.prose :not(pre) > code {
+  @apply rounded bg-zinc-100 px-1.5 py-0.5 font-normal dark:bg-zinc-800;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
 }

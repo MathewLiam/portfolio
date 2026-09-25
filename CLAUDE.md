@@ -4,7 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal portfolio website (package name `portfolio`). It's still close to the stock `create-next-app` scaffold: `src/app/page.tsx` and the metadata in `src/app/layout.tsx` are the template placeholders.
+A personal developer blog. Posts are Markdown files in `content/posts/`, rendered to static HTML at build time, so publishing a post means deploying the site again.
+
+## Blog architecture
+
+- `src/lib/posts.ts` is the only content layer. It reads `content/posts/*.md`, parses front matter with gray-matter (`title` and `date` are required; `description`, `tags` and `draft` are optional), and renders Markdown through unified (remark-gfm → rehype-slug → rehype-pretty-code/Shiki → HTML). The slug is the file name. A post with invalid front matter throws, which fails the build on purpose.
+- Posts with `draft: true` are included only when `NODE_ENV !== "production"`, so they show in `next dev` but not in `next build`.
+- `src/app/page.tsx` lists the posts. `src/app/posts/[slug]/page.tsx` pre-renders each one with `generateStaticParams`. Don’t add `export const dynamicParams = false`: on Next 14.2.3 with `output: "export"`, it makes `next dev` throw a misleading "missing exported function generateStaticParams()" error, and static export only emits the generated slugs anyway. In dev, an unknown slug returns a 500 ("missing param … in generateStaticParams()"); the deployed site serves `404.html`.
+- Shiki writes both a light and a dark theme as CSS variables (`--shiki-light` / `--shiki-dark`). `globals.css` picks between them with `prefers-color-scheme`, and the prose styling comes from `@tailwindcss/typography`.
+- The site name, description and author are set in `src/lib/site.ts`.
+- `next dev` and `next build` share `.next/`. Running a build while the dev server is up corrupts the dev server's cache (e.g. "Cannot find module './vendor-chunks/…'"); restart `next dev` to fix it.
 
 ## Stack
 

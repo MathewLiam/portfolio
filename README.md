@@ -1,4 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Developer blog
+
+A static developer blog built with [Next.js](https://nextjs.org/) and deployed to Cloudflare Pages.
+
+## Writing a post
+
+Add a Markdown file to `content/posts/`. The file name is the URL slug: `my-post.md` is served at `/posts/my-post`.
+
+```markdown
+---
+title: My post                  # required
+date: 2026-09-25                # required, YYYY-MM-DD
+description: One-line summary shown on the homepage.
+tags: [dotnet, azure]
+draft: true                     # optional: shown in `npm run dev`, left out of builds
+---
+
+Post content in GitHub-flavoured Markdown. Fenced code blocks are syntax highlighted.
+```
+
+Posts are rendered at build time, so a new post goes live when the site is next deployed (push to `master`). See `content/posts/hello-world.md` for an example.
 
 ## Getting Started
 
