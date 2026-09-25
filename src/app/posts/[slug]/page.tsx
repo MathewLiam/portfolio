@@ -6,7 +6,10 @@ import { formatDate, getAllPosts, getPost } from "@/lib/posts";
 type Props = { params: { slug: string } };
 
 export function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+  const params = getAllPosts().map((post) => ({ slug: post.slug }));
+  // With `output: "export"`, Next treats an empty list as a missing generateStaticParams and
+  // fails the build (e.g. when every post is a draft). Emit one slug that renders the 404 page.
+  return params.length > 0 ? params : [{ slug: "_no-posts" }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
