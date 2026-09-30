@@ -44,7 +44,7 @@
 	],
 	// Origin allowed to call the public API from the browser. ADMIN_TOKEN is a secret (`wrangler secret put`), not a var.
 	"vars": {
-		"ALLOWED_ORIGIN": "https://mm-website.pages.dev"
+		"ALLOWED_ORIGIN": "https://www.matthedev.co.uk"
 	}
 	/**
 	 * Smart Placement
