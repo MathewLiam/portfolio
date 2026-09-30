@@ -5,7 +5,6 @@ import { HTTPException } from "hono/http-exception";
 import { timingSafeEqual } from "hono/utils/buffer";
 import commentService from "./services/commentService";
 import { createCommentValidator } from "./validators/commentValidator";
-import { handleModeration } from "./queue";
 import { CommentStatus, ModerationMessage } from "./types/models";
 
 type AppEnv = { Bindings: CloudflareBindings };
@@ -81,5 +80,11 @@ app.route("/admin", admin);
 
 export default {
   fetch: app.fetch,
-  queue: handleModeration,
+  async queue(batch) {
+    for (const msg of batch.messages) {
+      const { commentId } = msg.body;
+      console.log(`msg received: ${msg.id}. APPROVE: /admin/comment/${commentId}/approve, REJECT: /admin/comment/${commentId}/reject`);
+      msg.ack();
+    }
+  },
 } satisfies ExportedHandler<CloudflareBindings, ModerationMessage>;

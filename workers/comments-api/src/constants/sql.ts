@@ -9,6 +9,3 @@ export const GET_COMMENT_SQL: string = `SELECT ${COMMENT_COLUMNS} FROM comment W
 export const LIST_APPROVED_COMMENTS_SQL: string = "SELECT id, author, title, body, created_at AS createdAt FROM comment WHERE post_slug = ? AND status = 'approved' ORDER BY created_at DESC LIMIT 100";
 
 export const UPDATE_COMMENT_STATUS_SQL: string = `UPDATE comment SET status = ? WHERE id = ? RETURNING ${COMMENT_COLUMNS}`;
-
-// Only moves a comment out of 'pending', so a queue redelivery never overrides an admin's decision.
-export const MODERATE_PENDING_COMMENT_SQL: string = "UPDATE comment SET status = ? WHERE id = ? AND status = 'pending'";

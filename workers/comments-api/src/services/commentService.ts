@@ -1,5 +1,5 @@
 import { Comment, CommentStatus, CreateCommentInput, ModerationMessage, PublicComment } from "../types/models";
-import { CREATE_COMMENT_SQL, GET_COMMENT_SQL, LIST_APPROVED_COMMENTS_SQL, MODERATE_PENDING_COMMENT_SQL, UPDATE_COMMENT_STATUS_SQL } from "../constants/sql";
+import { CREATE_COMMENT_SQL, GET_COMMENT_SQL, LIST_APPROVED_COMMENTS_SQL, UPDATE_COMMENT_STATUS_SQL } from "../constants/sql";
 
 
 const commentService = {
@@ -34,15 +34,6 @@ const commentService = {
           return env.DB.prepare(UPDATE_COMMENT_STATUS_SQL)
                .bind(status, id)
                .first<Comment>();
-     },
-
-     // Automated decision: only applies while the comment is still pending.
-     moderatePending: async function(env: CloudflareBindings, id: string, status: CommentStatus): Promise<boolean> {
-          const { meta } = await env.DB.prepare(MODERATE_PENDING_COMMENT_SQL)
-               .bind(status, id)
-               .run();
-
-          return meta.changes > 0;
      }
 
 }
