@@ -1,0 +1,2 @@
+ADMIN_TOKEN=generate-a-long-random-token
+ALLOWED_ORIGIN=http://localhost:3000

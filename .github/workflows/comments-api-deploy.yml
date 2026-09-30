@@ -1,0 +1,53 @@
+name: Comments API deploy
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "workers/comments-api/**"
+      - ".github/workflows/comments-api-deploy.yml"
+  pull_request:
+    branches: [master]
+    paths:
+      - "workers/comments-api/**"
+      - ".github/workflows/comments-api-deploy.yml"
+
+# Never run two deploys (and their D1 migrations) at once; queue the newer one instead of cancelling mid-migration.
+concurrency:
+  group: comments-api-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/comments-api
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "npm"
+          cache-dependency-path: workers/comments-api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # PRs only bundle and validate the Worker; there are no per-branch Worker previews.
+      - name: Validate build (dry run)
+        if: github.event_name == 'pull_request'
+        run: npx wrangler deploy --dry-run
+
+      # Migrations run before the deploy so new code never meets an old schema.
+      - name: Apply D1 migrations
+        if: github.event_name == 'push'
+        run: npx wrangler d1 migrations apply comments-db --remote
+
+      - name: Deploy Worker
+        if: github.event_name == 'push'
+        run: npx wrangler deploy

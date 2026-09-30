@@ -1,0 +1,72 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "comments-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-09-26",
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_id": "93f24f33-62ed-4986-8025-6e7899dd0028",
+			"database_name": "comments-db",
+			"migrations_dir": "migrations"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "BUCKET",
+			"bucket_name": "comments",
+			"jurisdiction": "eu"
+		}
+	],
+	"queues": {
+		"producers": [
+			{ "binding": "QUEUE", "queue": "comments" }
+		],
+		"consumers": [
+			{ "queue": "comments", "max_batch_size": 10, "max_batch_timeout": 5, "max_retries": 3 }
+		]
+	},
+	// Per-IP limit on POST /comment/:slug. namespace_id is any integer, unique within the account.
+	"ratelimits": [
+		{
+			"name": "RATE_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 5, "period": 60 }
+		}
+	],
+	// Origin allowed to call the public API from the browser. ADMIN_TOKEN is a secret (`wrangler secret put`), not a var.
+	"vars": {
+		"ALLOWED_ORIGIN": "https://mm-website.pages.dev"
+	}
+	/**
+	 * Smart Placement
+	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+	 */
+	// "placement": {  "mode": "smart" }
+	/**
+	 * Bindings
+	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+	 * databases, object storage, AI inference, real-time communication and more.
+	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+	 */
+	/**
+	 * Environment Variables
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+	 * Note: Use secrets to store sensitive data.
+	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 */
+	// "vars": {  "MY_VARIABLE": "production_value" }
+	/**
+	 * Service Bindings (communicate between multiple Workers)
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+	 */
+	// "services": [  {   "binding": "MY_SERVICE",   "service": "my-service"  } ]
+}

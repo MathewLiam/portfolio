@@ -35,6 +35,8 @@ jobs:
 
       - name: Build static export
         run: npm run build
+        env:
+          NEXT_PUBLIC_COMMENTS_API_URL: ${{ vars.COMMENTS_API_URL }}
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3.1.0

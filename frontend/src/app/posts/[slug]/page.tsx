@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatDate, getAllPosts, getPost } from "@/lib/posts";
+import Comments from "@/app/components/comments";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -48,6 +49,8 @@ export default async function PostPage({ params }: Props) {
       </header>
 
       <div className="prose prose-zinc max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+      <Comments slug={slug} />
 
       <footer className="mt-16 border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <Link href="/" className="text-sm text-sky-600 hover:underline dark:text-sky-400">

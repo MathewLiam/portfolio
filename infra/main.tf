@@ -26,3 +26,30 @@ resource "cloudflare_dns_record" "custom" {
 
   depends_on = [cloudflare_pages_domain.custom]
 }
+
+resource "cloudflare_d1_database" "comments_db" {
+  account_id = var.account_id
+  name = "comments_db"
+  jurisdiction = "eu"
+  read_replication = {
+    mode = "disabled"
+  }
+}
+
+resource "cloudflare_r2_bucket" "comments_bucket" {
+    account_id   = var.account_id
+    name         = "comments"
+    jurisdiction = "eu"
+  }
+
+resource "cloudflare_queue" "comments_queue" {
+  account_id = var.account_id
+  queue_name = "comments"
+}
+
+resource "cloudflare_worker" "comments_api" {
+  account_id = var.account_id
+  name = "comments-api"
+  tags = ["comments-api"]
+  depends_on = [cloudflare_d1_database.comments_db, cloudflare_r2_bucket.comments_bucket, cloudflare_queue.comments_queue]
+}
