@@ -31,9 +31,19 @@ export default function RootLayout({
         </header>
         <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12">{children}</main>
         <footer className="border-t border-zinc-200 dark:border-zinc-800">
-          <p className="mx-auto max-w-2xl px-4 py-6 text-sm text-zinc-500">
-            © {new Date().getFullYear()} {site.author}
-          </p>
+          <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-sm text-zinc-500">
+            <p>
+              © {new Date().getFullYear()} {site.author}
+            </p>
+            <a
+              href={site.buyMeACoffeeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-sky-600 dark:hover:text-sky-400"
+            >
+              ☕ Buy me a coffee
+            </a>
+          </div>
         </footer>
       </body>
     </html>
